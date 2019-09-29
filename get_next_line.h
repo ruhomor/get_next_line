@@ -6,7 +6,7 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/28 18:22:33 by kachiote          #+#    #+#             */
-/*   Updated: 2019/09/28 18:44:07 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/09/29 16:50:18 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 
 # define GET_NEXT_LINE_H
 
-# include <unistd.h>
+# include <unistd.hi>
+# include "libft.h"
+
+typedef	struct	s_fdes
+{
+	int			fd;
+	char		*line;
+	size_t		n;
+	short int	end;
+}				t_fdes;
 
 # define BUFF_SIZE 16
 
