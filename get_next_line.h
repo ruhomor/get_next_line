@@ -6,7 +6,7 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/28 18:22:33 by kachiote          #+#    #+#             */
-/*   Updated: 2019/10/03 16:30:39 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/10/03 17:49:01 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef	struct	s_fdes
 	char		*line;
 	size_t		n;
 	short int	end;
+	size_t		lensize;
 }				t_fdes;
 
 # define BUFF_SIZE 16

@@ -6,7 +6,7 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 19:20:46 by kachiote          #+#    #+#             */
-/*   Updated: 2019/10/03 16:52:35 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/10/03 17:48:59 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,36 @@ t_fdes	*ft_initdb(const int fd, t_list **db)
 		data->fd = fd;
 		data->n = 0;
 		data->end = 0;
+		data->lensize = 0;
 		ft_lstnew(data, sizeof(t_fdes));
 	}
 	return (data);
+}
+
+int		ft_trimnw(t_fdes *data)
+{
+	char	*str;
+	char	*buf;
+	char	*stcb;
+
+	str = data->line;
+	buf = str;
+	while ((*str) && (*str != '\n'))
+	{
+		ft_putchar_fd(*str++, 1);
+		data->lensize -= 1;
+	}
+	if (*str == '\n')
+		data->n -= 1;
+	if (data->lensize > 0) //reallocation
+	{
+		if (!(stcb = ft_strnew(data->lensize)))
+			return (-1);
+		while (*str)
+			*stcb++ = *str++;
+		free(data->line);
+		data->line = stcb;
+	}
 }
 
 int		get_next_line(const int fd, char **line)
