@@ -6,7 +6,7 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 19:20:46 by kachiote          #+#    #+#             */
-/*   Updated: 2019/10/03 17:48:59 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/10/09 17:06:44 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,20 @@
 
 t_fdes	*ft_searchdb(t_list **db, const int fd, short int tofree)
 {
-	if (*db)
+	while (*db)
 	{
-		while (**db)
-		{
-			if ((*db)->content->fd == fd)
-				break;
-			*db = (*db)->next;
-		}
-		if (tofree == 1)
-		{
-			ft_bzero(*bd->content, size);
-			free(*bd->content); //TODO free content->!!!???!!!
-			free(*bd);
-		}
-		else
-			return ((*db)->content);
+		if ((*db)->content->fd == fd)
+			break;
+		*db = (*db)->next;
 	}
+	if (tofree == 1)
+	{
+		ft_bzero(*db->content, size);
+		free(*db->content); //TODO free content->!!!???!!!
+		free(*db);
+	}
+	else
+		return ((*db)->content);
 	return (NULL);
 }
 

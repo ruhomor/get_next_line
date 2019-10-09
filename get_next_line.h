@@ -6,7 +6,7 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/28 18:22:33 by kachiote          #+#    #+#             */
-/*   Updated: 2019/10/03 17:49:01 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/10/09 17:02:50 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 # define GET_NEXT_LINE_H
 
-# include <unistd.hi>
-# include "libft.h"
+# include <unistd.h>
+# include "libft/libft.h"
+# include <stdlib.h> //xyuuu
 
 typedef	struct	s_fdes
 {
