@@ -6,92 +6,51 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 19:20:46 by kachiote          #+#    #+#             */
-/*   Updated: 2019/10/09 17:06:44 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/10/16 17:03:51 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_fdes	*ft_searchdb(t_list **db, const int fd, short int tofree)
+t_list	*ft_descnew(const int fd, char **line, size_t len, short int end)
 {
+	t_fdes	*data;
+	char	*buf;
+
+	data->fd = fd;
+	data->line = **line;
+	data->len = len;
+	data->n = 0;
+	data->end = 0;
+	while (len--)
+	{
+		if(*buf == '\n')
+			data->n++;
+	}
+}
+
+int		dbsearch(const int fd, t_list *db, short int del)
+{
+	short int found;
+
+	found = 0;
 	while (*db)
 	{
-		if ((*db)->content->fd == fd)
-			break;
-		*db = (*db)->next;
+		if (db->data->fd == fd)
+			return (db->data);
+		db = db->next;
 	}
-	if (tofree == 1)
-	{
-		ft_bzero(*db->content, size);
-		free(*db->content); //TODO free content->!!!???!!!
-		free(*db);
-	}
-	else
-		return ((*db)->content);
-	return (NULL);
-}
-
-t_fdes	*ft_initdb(const int fd, t_list **db)
-{
-	t_fdes			*data;
-
-	if ((!(*db)) && (!(data = ft_searchdb(db, fd, 0)))) //protect
-	{
-		data->fd = fd;
-		data->n = 0;
-		data->end = 0;
-		data->lensize = 0;
-		ft_lstnew(data, sizeof(t_fdes));
-	}
-	return (data);
-}
-
-int		ft_trimnw(t_fdes *data)
-{
-	char	*str;
-	char	*buf;
-	char	*stcb;
-
-	str = data->line;
-	buf = str;
-	while ((*str) && (*str != '\n'))
-	{
-		ft_putchar_fd(*str++, 1);
-		data->lensize -= 1;
-	}
-	if (*str == '\n')
-		data->n -= 1;
-	if (data->lensize > 0) //reallocation
-	{
-		if (!(stcb = ft_strnew(data->lensize)))
-			return (-1);
-		while (*str)
-			*stcb++ = *str++;
-		free(data->line);
-		data->line = stcb;
-	}
+	return (0);
 }
 
 int		get_next_line(const int fd, char **line)
 {
 	t_fdes			*data;
-	static	t_list	**db;
+	static	t_list	*db;
+	size_t			bytes;
+	size_t			len;
 
-	if (!(data = ft_initdb(fd, db))) //search add if not found return pointer
-		return (-1);
-	if (data->n > 0)
-		ft_trimnw(data->line); //TODO trims till \n or \0 and writes
-	else
-	{
-		if (data->end == 1)
-		{
-			ft_trimnw(data->line);//TODO trims till \n or \0 and writes (size collision?)
-			//destroy sring
-	 		ft_searchdb(db, fd, 1); //TODO free data free lst[fd]
-		}
-		else
-		{
-			while (readbuf()) //return writes \0 and \ns to db->data
-		}
-	}
+	data = ft_descnew(fd, line, 0, 0);
+	if ((!(db)) || (!(*db)))
+		ft_lstnew(data, sizeof(*data));
 }
