@@ -17,6 +17,7 @@ t_fdes	*ft_descnew(const int fd, char **line, size_t len, short int end)
 	t_fdes	*data;
 	char	*buf;
 
+	data = (t_fdes*)malloc(sizeof(*data));
 	data->fd = fd;
 	data->line = line;
 	data->len = len;
