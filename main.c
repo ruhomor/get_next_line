@@ -157,6 +157,7 @@ t_fdes    *ft_descnew(const int fd, char **line, size_t len, short int end)
     t_fdes    *data;
     char    *buf;
 
+	data = (t_fdes*)malloc(sizeof(*data));
     data->fd = fd;
     data->line = line;
     data->len = len;
@@ -165,7 +166,10 @@ t_fdes    *ft_descnew(const int fd, char **line, size_t len, short int end)
     while (len--)
     {
         if(*buf == '\n')
+		{
             data->n++;
+			buf++;
+		}
     }
     return (data);
 }
@@ -214,6 +218,8 @@ int        get_next_line(const int fd, char **line)
     }
     datafound = dbsearch(fd, db, 0);
     datacreated = dbsearch(228, db, 0);
+	printf("%ld\n", datacreated->n);
+	printf("%ld", datafound->n);
 }
 
 int main()

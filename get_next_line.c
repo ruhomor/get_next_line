@@ -6,7 +6,7 @@
 /*   By: kachiote <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 19:20:46 by kachiote          #+#    #+#             */
-/*   Updated: 2019/10/16 18:52:39 by kachiote         ###   ########.fr       */
+/*   Updated: 2019/11/18 16:22:24 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_fdes	*ft_descnew(const int fd, char **line, size_t len, short int end)
 	t_fdes	*data;
 	char	*buf;
 
+	data = (t_fdes*)malloc(sizeof(*data));
 	data->fd = fd;
 	data->line = line;
 	data->len = len;
@@ -30,7 +31,7 @@ t_fdes	*ft_descnew(const int fd, char **line, size_t len, short int end)
 	return (data);
 }
 
-t_fdes	*dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds element del=1 dels
+t_fdes	*dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds el del=1 dels
 {
 	t_list		*db;
 
