@@ -258,7 +258,7 @@ void		srch_n_join(char *buf, t_fdes *data)
 
 char		**cut_n(t_fdes *data)
 {
-	char	**resline;
+	char	*resline;
 	char	*memas;
 	int		size;
 	char	*laen;
@@ -270,10 +270,9 @@ char		**cut_n(t_fdes *data)
         size++;
         memas++;
     }
-	resline = (char**)malloc(sizeof(*resline));
-	*resline = ft_strnew(size);
+	resline = ft_strnew(size);
 	memas = data->line;
-	laen = *resline;
+	laen = resline;
 	while ((*memas != '\n') && (*memas))
 		*laen++ = *memas++;
 	if (*memas)
@@ -319,8 +318,8 @@ int			get_next_line(const int fd, char **line)
 			return (-1);
 	}
 	//printf("%s", data->line);
-	line = cut_n(data);
-//	printf("%s", *line);
+	*line = cut_n(data);
+	//printf("%s", *line);
 	if ((data->end == 1) && (data->n == 0))
 		return (0); //free all i guess? :>
 	return (1);
@@ -337,7 +336,7 @@ int main()
 	get_next_line(fd, laenn);
   //  get_next_line(fd, laenn);
 	printf("%s", *laenn);
-    get_next_line(fd, laenn);
-    printf("%s", *laenn);
+    //get_next_line(fd, laenn);
+    //printf("%s", *laenn);
 	return (0);
 }
