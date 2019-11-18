@@ -252,11 +252,11 @@ void		srch_n_join(char *buf, t_fdes *data)
     }
 	else
 	    newline = buf;
-	printf("%s", newline);
+	//printf("%s", newline);
 	data->line = newline;
 }
 
-char		**cut_n(t_fdes *data)
+char		*cut_n(t_fdes *data)
 {
 	char	*resline;
 	char	*memas;
@@ -325,13 +325,14 @@ int			get_next_line(const int fd, char **line)
 	return (1);
 }
 
-int main()
+int main(int argc, char **argv)
 {
 	char	**laenn;
 	char	*buf;
 	int		fd;
 
 	fd = open("input.t", O_RDONLY);
+	//printf("%s\n", argv[1]);
 	printf("fd: %d\n", fd);
 	get_next_line(fd, laenn);
   //  get_next_line(fd, laenn);
