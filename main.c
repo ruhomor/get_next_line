@@ -10,7 +10,7 @@ typedef    struct        s_list
 typedef    struct    s_fdes
 {
     int            fd;
-    char        **line;
+    char        *line;
     size_t        n;
     short int    end;
     size_t        len;
@@ -205,25 +205,64 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
     return ((t_fdes*)(*dbp)->content);
 }
 
-int        get_next_line(const int fd, char **line)
+void		srch_n_join(char *buf, t_fdes *data)
 {
-    t_fdes            *data;
-    static    t_list    **db;
-    size_t            bytes;
-    size_t            len;
-    t_fdes            *datafound;
-    t_fdes            *datacreated;
+	char	*newline;
+	char	*mem;
 
-    data = ft_descnew(fd, line, 0, 0);
-    if ((!(db)) || (!(*db)))
+	mem = buf;
+	while (*mem)
+	{
+		if (*mem == '\n')
+			data->n++;
+	}
+	newline = ft_strjoin(data->line, buf);
+	free(data->line);
+	free(buf);
+	data->line = newline;
+}
+
+char		**cut_n(t_fdes *data)
+{
+	char	**resline;
+	char	*memas;
+	int		size;
+
+	memas = data->line;
+	while ((*memas != '\n') && (*memas))
+		size++;
+	resline = ;
+}
+
+int			get_next_line(const int fd, char **line)
+{
+    t_fdes	*data;
+    static	t_list	**db;
+    size_t	bytes;
+    size_t	len;
+	char	*buf;
+
+    if (!(db))
     {
         db = (t_list**)malloc(sizeof(*db));
         *db = ft_lstnew(data, sizeof(*data));
     }
-    datafound = dbsearch(fd, db, 0);
-    datacreated = dbsearch(228, db, 0);
-	printf("%ld\n", datacreated->n);
-	printf("%ld", datafound->n);
+    data = dbsearch(fd, db, 0);
+	while (!(data->n) || !(data->end))
+	{
+		if (bytes = read(data->fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE))
+		{
+			if (bytes < BUFF_SIZE)
+				data->end = 1;
+			srch_n_join(buf, data);
+		}
+		else
+			return (-1);
+	}
+	line = cut_n(data);
+	if ((data->end == 1) && (data->n == 0))
+		return (0); //free all i guess? :>
+	return (1);
 }
 
 int main()
