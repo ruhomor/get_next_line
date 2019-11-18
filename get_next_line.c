@@ -66,12 +66,13 @@ int		get_next_line(const int fd, char **line)
 	size_t			len;
 	t_fdes			*datafound;
 
-	data = ft_descnew(fd, line, 0, 0);
+	//data = ft_descnew(fd, line, 0, 0); wjf!
 	if ((!(db)) || (!(*db)))
 	{
 		db = (t_list**)malloc(sizeof(*db));
 		*db = ft_lstnew(data, sizeof(*data));
 	}
-	datafound = dbsearch(fd, db, 0);
-	datacreated = dbsearch(228, db, 0);
+	//datafound = dbsearch(fd, db, 0);
+	//datacreated = dbsearch(228, db, 0); wjf!
+	
 }
