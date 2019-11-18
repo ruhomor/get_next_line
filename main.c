@@ -227,11 +227,28 @@ char		**cut_n(t_fdes *data)
 	char	**resline;
 	char	*memas;
 	int		size;
+	char	*laen;
 
 	memas = data->line;
 	while ((*memas != '\n') && (*memas))
 		size++;
-	resline = ;
+	*resline = ft_strnew(size);
+	memas = data->line;
+	laen = *resline;
+	while ((*memas != '\n') && (*memas))
+		*laen++ = *memas++;
+	if (*memas)
+	{
+		memas++;
+		laen = ft_strnew(ft_strlen(data->line) - 1 - size);
+		while (*memas)
+			*laen++ = *memas++;
+		free(data->line);
+		data->line = laen;
+	}
+	else
+		free(data->line);
+	return (resline);
 }
 
 int			get_next_line(const int fd, char **line)
