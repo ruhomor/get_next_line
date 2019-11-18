@@ -20,13 +20,13 @@
 
 typedef	struct	s_fdes
 {
-	const int	fd;
-	char		**line;
+    int	fd;
+	char		*line;
 	size_t		n;
 	short int	end;
 	size_t		len;
 }				t_fdes;
 
 # define BUFF_SIZE 16
-
+int		get_next_line(const int fd, char **line);
 #endif

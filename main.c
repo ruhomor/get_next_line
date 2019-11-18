@@ -1,5 +1,8 @@
 #include <stdlib.h>
-
+#include <unistd.h>
+#include <fcntl.h>
+#include "get_next_line.h"
+/*
 typedef    struct        s_list
 {
     void            *content;
@@ -152,18 +155,42 @@ void	ft_lstadd(t_list **alst, t_list *new)
 	new->next = meme;
 }
 
+size_t	ft_strlen(const char *s)
+{
+	char *b;
+
+	b = (char*)s;
+	while (*b)
+		b++;
+	return ((size_t)(b - s));
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*res;
+	char	*mem;
+
+	if ((s1) && (s2) && (res = ft_strnew(ft_strlen(s1) + ft_strlen(s2))))
+	{
+		mem = res;
+		while (*s1)
+			*mem++ = *s1++;
+		while (*s2)
+			*mem++ = *s2++;
+		*mem = '\0';
+		return (res);
+	}
+	return (NULL);
+}
+*/
 t_fdes    *ft_descnew(const int fd, char **line, size_t len, short int end)
 {
     t_fdes    *data;
     char    *buf;
 
-<<<<<<< HEAD
 	data = (t_fdes*)malloc(sizeof(*data));
-=======
-    data = (t_fdes*)malloc(sizeof(*data));
->>>>>>> fa9bfd4f24454f06475659a7116c07827d2d366e
     data->fd = fd;
-    data->line = line;
+    //data->line = *line;
     data->len = len;
     data->n = 0;
     data->end = 0;
@@ -183,11 +210,13 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
     t_list        *db;
 
     db = *dbp;
-    if (db)
+    if ((db) && (db->content))
     {
         if (((t_fdes*)(db->content))->fd == fd)
             return ((t_fdes*)db->content);
     }
+    else
+        ft_lstadd(dbp, ft_lstnew(ft_descnew(fd, 0, 0, 0), sizeof(t_fdes))); //add new if notfound
     while (db->next)
     {
         if (((t_fdes*)(db->next->content))->fd == fd)
@@ -200,8 +229,6 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
         free(db->content);
         free(db);
     }
-    else
-        ft_lstadd(dbp, ft_lstnew(ft_descnew(fd, 0, 0, 0), sizeof(t_fdes))); //add new if notfound
     return ((t_fdes*)(*dbp)->content);
 }
 
@@ -214,11 +241,18 @@ void		srch_n_join(char *buf, t_fdes *data)
 	while (*mem)
 	{
 		if (*mem == '\n')
-			data->n++;
+			data->n += 1;
+		mem++;
 	}
-	newline = ft_strjoin(data->line, buf);
-	free(data->line);
-	free(buf);
+	if (data->line)
+	{
+        newline = ft_strjoin(data->line, buf);
+        free(data->line);
+        free(buf);
+    }
+	else
+	    newline = buf;
+	printf("%s", newline);
 	data->line = newline;
 }
 
@@ -229,9 +263,14 @@ char		**cut_n(t_fdes *data)
 	int		size;
 	char	*laen;
 
+	size = 0;
 	memas = data->line;
 	while ((*memas != '\n') && (*memas))
-		size++;
+	{
+        size++;
+        memas++;
+    }
+	resline = (char**)malloc(sizeof(*resline));
 	*resline = ft_strnew(size);
 	memas = data->line;
 	laen = *resline;
@@ -248,6 +287,7 @@ char		**cut_n(t_fdes *data)
 	}
 	else
 		free(data->line);
+	data->n -= 1;
 	return (resline);
 }
 
@@ -259,13 +299,15 @@ int			get_next_line(const int fd, char **line)
     size_t	len;
 	char	*buf;
 
+	if ((line) && (*line))
+		free(*line);
     if (!(db))
     {
         db = (t_list**)malloc(sizeof(*db));
         *db = ft_lstnew(data, sizeof(*data));
     }
     data = dbsearch(fd, db, 0);
-	while (!(data->n) || !(data->end))
+	while (!(data->n) && !(data->end))
 	{
 		if (bytes = read(data->fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE))
 		{
@@ -276,7 +318,9 @@ int			get_next_line(const int fd, char **line)
 		else
 			return (-1);
 	}
+	//printf("%s", data->line);
 	line = cut_n(data);
+//	printf("%s", *line);
 	if ((data->end == 1) && (data->n == 0))
 		return (0); //free all i guess? :>
 	return (1);
@@ -284,14 +328,16 @@ int			get_next_line(const int fd, char **line)
 
 int main()
 {
-  char  **laenn;
-  char  *buf;
-  int  len = 2, suka = 2;
-  laenn = (char**)malloc(sizeof(*laenn));
-  *laenn = ft_strnew(len);
-  buf = *laenn;
-  while (suka--)
-      *buf++ = 'a';
-  get_next_line(1, laenn);
-  return (0);
+	char	**laenn;
+	char	*buf;
+	int		fd;
+
+	fd = open("input.t", O_RDONLY);
+	printf("fd: %d\n", fd);
+	get_next_line(fd, laenn);
+  //  get_next_line(fd, laenn);
+	printf("%s", *laenn);
+    get_next_line(fd, laenn);
+    printf("%s", *laenn);
+	return (0);
 }

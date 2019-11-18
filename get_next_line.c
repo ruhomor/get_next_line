@@ -9,10 +9,10 @@
 /*   Updated: 2019/11/18 16:22:24 by kachiote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/*
 #include "get_next_line.h"
 
-t_fdes	*ft_descnew(const int fd, char **line, size_t len, short int end)
+t_fdes	*ft_descnew(int fd, char **line, size_t len, short int end)
 {
 	t_fdes	*data;
 	char	*buf;
@@ -76,3 +76,4 @@ int		get_next_line(const int fd, char **line)
 	//datacreated = dbsearch(228, db, 0); wjf!
 	
 }
+ */
