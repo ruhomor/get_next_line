@@ -1,5 +1,8 @@
 #include <stdlib.h>
-
+#include <unistd.h>
+#include <fcntl.h>
+#include "get_next_line.h"
+/*
 typedef    struct        s_list
 {
     void            *content;
@@ -152,18 +155,42 @@ void	ft_lstadd(t_list **alst, t_list *new)
 	new->next = meme;
 }
 
+size_t	ft_strlen(const char *s)
+{
+	char *b;
+
+	b = (char*)s;
+	while (*b)
+		b++;
+	return ((size_t)(b - s));
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*res;
+	char	*mem;
+
+	if ((s1) && (s2) && (res = ft_strnew(ft_strlen(s1) + ft_strlen(s2))))
+	{
+		mem = res;
+		while (*s1)
+			*mem++ = *s1++;
+		while (*s2)
+			*mem++ = *s2++;
+		*mem = '\0';
+		return (res);
+	}
+	return (NULL);
+}
+*/
 t_fdes    *ft_descnew(const int fd, char **line, size_t len, short int end)
 {
     t_fdes    *data;
     char    *buf;
 
-<<<<<<< HEAD
 	data = (t_fdes*)malloc(sizeof(*data));
-=======
-    data = (t_fdes*)malloc(sizeof(*data));
->>>>>>> fa9bfd4f24454f06475659a7116c07827d2d366e
     data->fd = fd;
-    data->line = line;
+    data->line = ft_strnew(0);
     data->len = len;
     data->n = 0;
     data->end = 0;
@@ -183,7 +210,7 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
     t_list        *db;
 
     db = *dbp;
-    if (db)
+    if ((db) && (db->content))
     {
         if (((t_fdes*)(db->content))->fd == fd)
             return ((t_fdes*)db->content);
@@ -205,49 +232,72 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
     return ((t_fdes*)(*dbp)->content);
 }
 
-void		srch_n_join(char *buf, t_fdes *data)
+void		srch_n_join(char **mbuf, t_fdes *data)
 {
 	char	*newline;
 	char	*mem;
+	char    *buf;
 
+	buf = *mbuf;
 	mem = buf;
 	while (*mem)
 	{
 		if (*mem == '\n')
-			data->n++;
+			data->n += 1;
+		mem++;
 	}
-	newline = ft_strjoin(data->line, buf);
-	free(data->line);
-	free(buf);
+	if (data->line)
+	{
+        newline = ft_strjoin(data->line, buf);
+        free(data->line);
+        free(*mbuf);
+    }
+	else
+	    newline = buf;
+	//printf("%s", newline);
 	data->line = newline;
 }
 
-char		**cut_n(t_fdes *data)
+char		*cut_n(t_fdes *data)
 {
-	char	**resline;
 	char	*memas;
+	char    *tofree;
 	int		size;
 	char	*laen;
+	char    *resline;
 
+	size = 0;
 	memas = data->line;
-	while ((*memas != '\n') && (*memas))
-		size++;
-	*resline = ft_strnew(size);
-	memas = data->line;
-	laen = *resline;
-	while ((*memas != '\n') && (*memas))
-		*laen++ = *memas++;
-	if (*memas)
+	while ((*memas != '\n') && (*memas)) //ищем переход считаем размер результата
 	{
-		memas++;
-		laen = ft_strnew(ft_strlen(data->line) - 1 - size);
-		while (*memas)
+        size++;
+        memas++;
+    }
+	resline = ft_strnew(size); //выделяем память под результат
+	memas = data->line; //для записи результата
+	laen = resline;
+	while ((*memas != '\n') && (*memas)) //записываем результат
+		*laen++ = *memas++;
+	if (*memas) //дописываем остаток в data->line
+	{
+		memas++; //пропускаем \n
+		tofree = data->line;
+		laen = ft_strnew(ft_strlen(data->line) - size); //выделяем память
+		data->line = laen; //ставим указатель на начало
+		while (*memas) //до конца строки записываем
 			*laen++ = *memas++;
-		free(data->line);
-		data->line = laen;
+		free(tofree);
 	}
+	else //TODO если дочитали и вывели все static
+    {
+        free(data->line);
+        data->line = ft_strnew(0);
+    }
+	if (data->n > 0)
+	    data->n -= 1;
 	else
-		free(data->line);
+	    if (data->end == 1)
+	        data->end += 1;
 	return (resline);
 }
 
@@ -255,8 +305,6 @@ int			get_next_line(const int fd, char **line)
 {
     t_fdes	*data;
     static	t_list	**db;
-    size_t	bytes;
-    size_t	len;
 	char	*buf;
 
     if (!(db))
@@ -265,33 +313,50 @@ int			get_next_line(const int fd, char **line)
         *db = ft_lstnew(data, sizeof(*data));
     }
     data = dbsearch(fd, db, 0);
-	while (!(data->n) || !(data->end))
+	while (!(data->n) && !(data->end))
 	{
-		if (bytes = read(data->fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE))
+		if (read(data->fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE))
 		{
-			if (bytes < BUFF_SIZE)
+		    //printf("%s\n", buf);
+            if (ft_strlen(buf) < BUFF_SIZE)
 				data->end = 1;
-			srch_n_join(buf, data);
+			srch_n_join(&buf, data);
 		}
 		else
 			return (-1);
 	}
-	line = cut_n(data);
-	if ((data->end == 1) && (data->n == 0))
+	//printf("%s", data->line);
+	*line = cut_n(data);
+	//printf("%s", *line);
+	if ((data->end == 2) && (data->n == 0))
 		return (0); //free all i guess? :>
 	return (1);
 }
 
-int main()
+int main(int argc, char **argv)
 {
-  char  **laenn;
-  char  *buf;
-  int  len = 2, suka = 2;
-  laenn = (char**)malloc(sizeof(*laenn));
-  *laenn = ft_strnew(len);
-  buf = *laenn;
-  while (suka--)
-      *buf++ = 'a';
-  get_next_line(1, laenn);
-  return (0);
+	char	**laenn;
+	int		fd;
+	int     i;
+	int     fd2;
+
+	laenn = (char**)malloc(sizeof(*laenn));
+	fd = open("getme.txt", O_RDONLY);
+	fd2 = open("getme2.txt", O_RDONLY);
+	//printf("%s\n", argv[1]);
+	printf("fd: %d\n", fd);
+	while (get_next_line(fd, laenn))
+	{
+        printf("%d: %s\n",i++ , *laenn);
+    }
+	printf("%d: %s\n", i, *laenn);
+	i = 0;
+    while (get_next_line(fd2, laenn))
+    {
+        printf("%d: %s\n", i++, *laenn);
+    }
+    printf("%d: %s\n", i, *laenn);
+    //get_next_line(fd, laenn);
+    //printf("%s", *laenn);
+	return (0);
 }
