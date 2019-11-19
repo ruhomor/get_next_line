@@ -258,39 +258,38 @@ void		srch_n_join(char **mbuf, t_fdes *data)
 	data->line = newline;
 }
 
-char		*cut_n(t_fdes *data, char **resline)
+char		*cut_n(t_fdes *data)
 {
 	char	*memas;
 	int		size;
 	char	*laen;
+	char    *resline;
 
 	size = 0;
 	memas = data->line;
-	while ((*memas != '\n') && (*memas))
+	while ((*memas != '\n') && (*memas)) //ищем переход считаем размер результата
 	{
         size++;
         memas++;
     }
-	if (!(resline))
-	    resline = (char**)malloc(sizeof(*resline));
-	*resline = ft_strnew(size);
-	memas = data->line;
-	laen = *resline;
-	while ((*memas != '\n') && (*memas))
+	resline = ft_strnew(size); //выделяем память под результат
+	memas = data->line; //для записи результата
+	laen = resline;
+	while ((*memas != '\n') && (*memas)) //записываем результат
 		*laen++ = *memas++;
-	if (*memas)
+	if (*memas) //дописываем остаток в data->line
 	{
-		memas++;
-		laen = ft_strnew(ft_strlen(data->line) - 1 - size);
-		while (*memas)
+		memas++; //пропускаем \n
+		free(data->line); //освобождаем память
+		laen = ft_strnew(ft_strlen(data->line) - 1 - size); //выделяем память
+		data->line = laen; //ставим указатель на начало
+		while (*memas) //до конца строки записываем
 			*laen++ = *memas++;
-		free(data->line);
-		data->line = laen;
 	}
-	else
+	else //TODO если дочитали и вывели все static
 		free(data->line);
 	data->n -= 1;
-	//return (resline);
+	return (resline);
 }
 
 int			get_next_line(const int fd, char **line)
@@ -309,7 +308,7 @@ int			get_next_line(const int fd, char **line)
 	{
 		if (read(data->fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE))
 		{
-		    printf("%s\n", buf);
+		    //printf("%s\n", buf);
             if (ft_strlen(buf) < BUFF_SIZE)
 				data->end = 1;
 			srch_n_join(&buf, data);
@@ -318,7 +317,7 @@ int			get_next_line(const int fd, char **line)
 			return (-1);
 	}
 	//printf("%s", data->line);
-	cut_n(data, line);
+	*line = cut_n(data);
 	//printf("%s", *line);
 	if ((data->end == 1) && (data->n == 0))
 		return (0); //free all i guess? :>
@@ -335,8 +334,11 @@ int main(int argc, char **argv)
 	//printf("%s\n", argv[1]);
 	printf("fd: %d\n", fd);
 	get_next_line(fd, laenn);
-  //  get_next_line(fd, laenn);
-	printf("%s", *laenn);
+	printf("111:: %s\n", *laenn);
+    get_next_line(fd, laenn);
+    printf("222:: %s\n", *laenn);
+    get_next_line(fd, laenn);
+    printf("333:: %s\n", *laenn);
     //get_next_line(fd, laenn);
     //printf("%s", *laenn);
 	return (0);
