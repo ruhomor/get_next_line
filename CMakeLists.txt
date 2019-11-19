@@ -1,12 +1,13 @@
-cmake_minimum_required(VERSION 3.14)
-project(get_next_line C)
+cmake_minimum_required(VERSION 3.15)
+project(get_next_line)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 include_directories(libft)
 
 add_executable(get_next_line
+        libft/author
         libft/ft_atoi.c
         libft/ft_backwardsmemcpy.c
         libft/ft_bzero.c
@@ -72,7 +73,17 @@ add_executable(get_next_line
         libft/ft_tolower.c
         libft/ft_toupper.c
         libft/ft_writenbr.c
+        libft/libft.a
         libft/libft.h
+        libft/Makefile
+        author
         get_next_line.c
+        get_next_line.c.bak
+        get_next_line.c.bak2
         get_next_line.h
-        main.c)
+        main.c
+        main.c.bak
+        Makefile
+        meme
+        ruslan
+        test_gnl)
