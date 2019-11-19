@@ -261,6 +261,7 @@ void		srch_n_join(char **mbuf, t_fdes *data)
 char		*cut_n(t_fdes *data)
 {
 	char	*memas;
+	char    *tofree;
 	int		size;
 	char	*laen;
 	char    *resline;
@@ -280,15 +281,23 @@ char		*cut_n(t_fdes *data)
 	if (*memas) //дописываем остаток в data->line
 	{
 		memas++; //пропускаем \n
-		free(data->line); //освобождаем память
-		laen = ft_strnew(ft_strlen(data->line) - 1 - size); //выделяем память
+		tofree = data->line;
+		laen = ft_strnew(ft_strlen(data->line) - size); //выделяем память
 		data->line = laen; //ставим указатель на начало
 		while (*memas) //до конца строки записываем
 			*laen++ = *memas++;
+		free(tofree);
 	}
 	else //TODO если дочитали и вывели все static
-		free(data->line);
-	data->n -= 1;
+    {
+        free(data->line);
+        data->line = ft_strnew(0);
+    }
+	if (data->n > 0)
+	    data->n -= 1;
+	else
+	    if (data->end == 1)
+	        data->end += 1;
 	return (resline);
 }
 
@@ -319,7 +328,7 @@ int			get_next_line(const int fd, char **line)
 	//printf("%s", data->line);
 	*line = cut_n(data);
 	//printf("%s", *line);
-	if ((data->end == 1) && (data->n == 0))
+	if ((data->end == 2) && (data->n == 0))
 		return (0); //free all i guess? :>
 	return (1);
 }
@@ -328,17 +337,25 @@ int main(int argc, char **argv)
 {
 	char	**laenn;
 	int		fd;
+	int     i;
+	int     fd2;
 
 	laenn = (char**)malloc(sizeof(*laenn));
-	fd = open("Makefile", O_RDONLY);
+	fd = open("getme.txt", O_RDONLY);
+	fd2 = open("getme2.txt", O_RDONLY);
 	//printf("%s\n", argv[1]);
 	printf("fd: %d\n", fd);
-	get_next_line(fd, laenn);
-	printf("111:: %s\n", *laenn);
-    get_next_line(fd, laenn);
-    printf("222:: %s\n", *laenn);
-    get_next_line(fd, laenn);
-    printf("333:: %s\n", *laenn);
+	while (get_next_line(fd, laenn))
+	{
+        printf("%d: %s\n",i++ , *laenn);
+    }
+	printf("%d: %s\n", i, *laenn);
+	i = 0;
+    while (get_next_line(fd2, laenn))
+    {
+        printf("%d: %s\n", i++, *laenn);
+    }
+    printf("%d: %s\n", i, *laenn);
     //get_next_line(fd, laenn);
     //printf("%s", *laenn);
 	return (0);
