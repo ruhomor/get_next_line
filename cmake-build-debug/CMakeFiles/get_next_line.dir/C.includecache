@@ -22,13 +22,3 @@ stdlib.h
 string.h
 -
 
-/Users/Ruslan/Desktop/born2code/get_next_line/main.c
-stdlib.h
--
-unistd.h
--
-fcntl.h
--
-get_next_line.h
-/Users/Ruslan/Desktop/born2code/get_next_line/get_next_line.h
-

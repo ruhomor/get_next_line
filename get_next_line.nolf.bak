@@ -123,6 +123,8 @@ int			get_next_line(const int fd, char **line)
         *db = ft_lstnew(data, sizeof(*data));
     }
     data = dbsearch(fd, db, 0);
+    if (data->end == 3)
+        return (0);
 	while (!(data->n) && !(data->end))
 	{
 		if ((bytes = read(fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE)))
@@ -138,8 +140,7 @@ int			get_next_line(const int fd, char **line)
 	}
 	*line = cut_n(data);
 	if ((data->end == 2) && (data->n == 0)) //TODO figure out read
-    {
-        return (0); //free all i guess? :>
-    }
+	    data->end = 3;
+        //return (0); //free all i guess? :>
 	return (1);
 }
