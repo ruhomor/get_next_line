@@ -1,24 +1,14 @@
 #include "get_next_line.h"
 
-t_fdes    *ft_descnew(const int fd, char **line, size_t len, short int end)
+t_fdes    *ft_descnew(const int fd)
 {
     t_fdes    *data;
-    char    *buf;
 
 	data = (t_fdes*)malloc(sizeof(*data));
     data->fd = fd;
     data->line = ft_strnew(0);
-    data->len = len;
     data->n = 0;
     data->end = 0;
-    while (len--)
-    {
-        if(*buf == '\n')
-		{
-            data->n++;
-			buf++;
-		}
-    }
     return (data);
 }
 
@@ -45,7 +35,7 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
         free(db);
     }
     else
-        ft_lstadd(dbp, ft_lstnew(ft_descnew(fd, 0, 0, 0), sizeof(t_fdes))); //add new if notfound
+        ft_lstadd(dbp, ft_lstnew(ft_descnew(fd), sizeof(t_fdes))); //add new if notfound
     return ((t_fdes*)(*dbp)->content);
 }
 
@@ -146,6 +136,9 @@ int			get_next_line(const int fd, char **line)
 	*line = cut_n(data);
 	//printf("%s", *line);
 	if ((data->end == 2) && (data->n == 0))
-		return (0); //free all i guess? :>
+	{
+	    dbsearch(fd, db, 1);
+        return (0); //free all i guess? :>
+    }
 	return (1);
 }

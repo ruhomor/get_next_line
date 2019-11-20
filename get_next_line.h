@@ -24,7 +24,6 @@ typedef	struct	s_fdes
 	char		*line;
 	size_t		n;
 	short int	end;
-	size_t		len;
 }				t_fdes;
 
 # define BUFF_SIZE 16
