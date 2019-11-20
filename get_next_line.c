@@ -4,7 +4,7 @@ t_fdes    *ft_descnew(const int fd)
 {
     t_fdes    *data;
 
-	data = (t_fdes*)malloc(sizeof(*data));
+    data = (t_fdes *) malloc(sizeof(*data));
     data->fd = fd;
     data->line = ft_strnew(0);
     data->n = 0;
@@ -30,9 +30,12 @@ t_fdes    *dbsearch(const int fd, t_list **dbp, short int del) //del=0 adds elem
     }
     if (del == 1) //free if delmode
     {
-        ft_bzero(db->content, db->content_size);
+        free(((t_fdes*)(db->content))->line);
         free(db->content);
         free(db);
+        //ft_bzero(db->content, db->content_size); //lstdel
+        //free(db->content);
+        //free(db);
     }
     else
         ft_lstadd(dbp, ft_lstnew(ft_descnew(fd), sizeof(t_fdes))); //add new if notfound
@@ -102,27 +105,24 @@ char		*cut_n(t_fdes *data)
     }
 	if (data->n > 0)
 	    data->n -= 1;
-	else
-	    if (data->end == 1)
-	        data->end += 1;
+	//else
+	//    if (data->end == 1)
+	//        data->end += 1;
 	return (resline);
 }
 
 int			get_next_line(const int fd, char **line)
 {
     t_fdes	*data;
-    static	t_list	**db;
+    static	t_list	*db;
 	char	*buf;
 	size_t  bytes;
 
 	if ((fd < 0) || (!(line)))
 	    return (-1);
     if (!(db))
-    {
-        db = (t_list**)malloc(sizeof(*db));
-        *db = ft_lstnew(data, sizeof(*data));
-    }
-    data = dbsearch(fd, db, 0);
+        db = ft_lstnew(ft_descnew(fd), sizeof(*data));
+    data = dbsearch(fd, &db, 0);
 	while (!(data->n) && !(data->end))
 	{
 		if ((bytes = read(fd, buf = ft_strnew(BUFF_SIZE), BUFF_SIZE)))
@@ -133,13 +133,13 @@ int			get_next_line(const int fd, char **line)
 		}
 		if (bytes == 0)
 		    data->end = 1;
-		if (bytes < 0)
-		    return (-1);
 	}
 	*line = cut_n(data);
 	if ((data->end == 2) && (data->n == 0)) //TODO figure out read
     {
         return (0); //free all i guess? :>
     }
+	if (data->end == 1)
+	    data->end += 1;
 	return (1);
 }

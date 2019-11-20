@@ -135,8 +135,6 @@ int			get_next_line(const int fd, char **line)
 		}
 		if (bytes == 0)
 		    data->end = 1;
-		if (bytes < 0)
-		    return (-1);
 	}
 	*line = cut_n(data);
 	if ((data->end == 2) && (data->n == 0)) //TODO figure out read

@@ -6,19 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/Users/Ruslan/Desktop/born2code/get_next_line/get_next_line.c
+/Users/kachiote/Desktop/get_next_line/get_next_line.c
 get_next_line.h
-/Users/Ruslan/Desktop/born2code/get_next_line/get_next_line.h
+/Users/kachiote/Desktop/get_next_line/get_next_line.h
 
-/Users/Ruslan/Desktop/born2code/get_next_line/get_next_line.h
+/Users/kachiote/Desktop/get_next_line/get_next_line.h
 unistd.h
 -
 libft/libft.h
-/Users/Ruslan/Desktop/born2code/get_next_line/libft/libft.h
+/Users/kachiote/Desktop/get_next_line/libft/libft.h
 stdlib.h
 -
 
-/Users/Ruslan/Desktop/born2code/get_next_line/libft/libft.h
+/Users/kachiote/Desktop/get_next_line/libft/libft.h
 string.h
 -
 

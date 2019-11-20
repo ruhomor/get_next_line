@@ -12,8 +12,8 @@ int main(int argc, char **argv)
 	int	    da;
 
 	laenn = (char**)malloc(sizeof(*laenn));
-	fd = open("getme.txt", O_RDONLY);
-	fd2 = open("getme2.txt", O_RDONLY);
+	fd2 = open("123test", O_RDONLY);
+	fd = open("s_perenosom", O_RDONLY);
 	//printf("%s\n", argv[1]);
 	printf("fd: %d\n", fd);
 	while ((da = get_next_line(fd, laenn)) > 0)
@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     }
 	printf("%d: %s\n", da, *laenn);
 	i = 0;
+	printf("fd2: %d\n", fd2);
     while ((da = get_next_line(fd2, laenn)) > 0)
     {
         printf("%d: %s\n", da, *laenn);

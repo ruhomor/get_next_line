@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/get_next_line.dir/get_next_line.c.o"
   "CMakeFiles/get_next_line.dir/libft/ft_atoi.c.o"
   "CMakeFiles/get_next_line.dir/libft/ft_backwardsmemcpy.c.o"
   "CMakeFiles/get_next_line.dir/libft/ft_bzero.c.o"
@@ -65,9 +64,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/get_next_line.dir/libft/ft_tolower.c.o"
   "CMakeFiles/get_next_line.dir/libft/ft_toupper.c.o"
   "CMakeFiles/get_next_line.dir/libft/ft_writenbr.c.o"
+  "CMakeFiles/get_next_line.dir/get_next_line.c.o"
   "CMakeFiles/get_next_line.dir/main.c.o"
-  "get_next_line"
   "get_next_line.pdb"
+  "get_next_line"
 )
 
 # Per-language clean rules from dependency scanning.
