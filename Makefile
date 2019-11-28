@@ -1,32 +1,18 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: kachiote <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/09/09 21:02:57 by kachiote          #+#    #+#              #
-#    Updated: 2019/09/28 18:24:56 by kachiote         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+FLAGS = -Wall -Werror -Wextra
 
 NAME = get_next_line
 
-INCL = ./
-
-FLAGS = -Werror -Wextra -Wall
+$(NAME):
+	gcc -c $(FLAGS) $(NAME).c -o $(NAME).o
 
 all: $(NAME)
 
-$(NAME):
-	@gcc $(FLAGS) $(NAME).c
-
 clean:
-	@rm -f $(OUT)
+	@rm -f $(NAME).o
 
 fclean: clean
-	@rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+main:
+	gcc $(FLAGS) main.c $(NAME).c libft/libft.a -I./ -o test
